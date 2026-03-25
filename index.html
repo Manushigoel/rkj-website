@@ -501,7 +501,7 @@
   <div class="topbar-left">
     <span>📞 <a href="tel:9821186339">+91 98211 86339</a></span>
     <div class="topbar-divider"></div>
-    <span>✉️ <a href="/cdn-cgi/l/email-protection#21534a4b401311101161464c40484d0f424e4c"><span class="__cf_email__" data-cfemail="f4869f9e95c6c4c5c4b49399959d98da979b99">[email&#160;protected]</span></a></span>
+    <span>✉️ <a href="mailto:rkja2010@gmail.com">rkja2010@gmail.com</a></span>
   </div>
   <div class="topbar-right">
     <a href="tel:02249712167">Office: 022-4971 2167</a>
@@ -838,8 +838,8 @@
       <div>
         <div class="cdetail-label">Email</div>
         <div class="cdetail-val">
-          <a href="/cdn-cgi/l/email-protection#592b3233386b696869193e34383035773a3634"><span class="__cf_email__" data-cfemail="f4869f9e95c6c4c5c4b49399959d98da979b99">[email&#160;protected]</span></a><br/>
-          <a href="/cdn-cgi/l/email-protection#f5929a909986949b91909085c3c5b58c949d9a9adb969a98"><span class="__cf_email__" data-cfemail="0f68606a637c6e616b6a6a7f393f4f766e676060216c6062">[email&#160;protected]</span></a>
+          <a href="mailto:rkja2010@gmail.com">rkja2010@gmail.com</a><br/>
+          <a href="mailto:goelsandeep60@yahoo.com">goelsandeep60@yahoo.com</a>
         </div>
       </div>
     </div>
@@ -922,15 +922,44 @@
   }
 </script>
 <script>
-  function submitForm(){
+  async function submitForm(){
     const req=['fn','ln','em','sv','mg'];
     if(req.some(id=>!document.getElementById(id).value.trim())){
       alert('Please fill in all required fields.');return;
     }
-    const fn = document.getElementById('fn').value.trim();
-    const ln = document.getElementById('ln').value.trim();
-    const em = document.getElementById('em').value.trim();
-    const ph = document.getElementById('ph').value.trim();
-    const sv = document.getElementById('sv').value.trim();
-    const mg = document.getElementById('mg').value.trim();
-    const subject = encodeURIComponent('Enquiry from ' + fn + ' ' + ln + ' 
+    const btn = document.querySelector('.btn-submit');
+    btn.textContent = 'Sending…';
+    btn.disabled = true;
+    const data = {
+      name: document.getElementById('fn').value.trim() + ' ' + document.getElementById('ln').value.trim(),
+      email: document.getElementById('em').value.trim(),
+      phone: document.getElementById('ph').value.trim(),
+      service: document.getElementById('sv').value.trim(),
+      message: document.getElementById('mg').value.trim()
+    };
+    try {
+      const res = await fetch('https://formspree.io/f/xaqlwzov', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      if(res.ok){
+        btn.textContent = '✓ Enquiry Sent!';
+        btn.style.background = 'var(--gold)';
+        ['fn','ln','em','ph','sv','mg'].forEach(id=>{
+          const el=document.getElementById(id);
+          if(el.tagName==='SELECT') el.selectedIndex=0; else el.value='';
+        });
+        setTimeout(()=>{ btn.textContent='Send Enquiry →'; btn.style.background=''; btn.disabled=false; }, 4000);
+      } else {
+        btn.textContent = 'Send Enquiry →'; btn.disabled=false;
+        alert('Something went wrong. Please try again or email us directly.');
+      }
+    } catch(e){
+      btn.textContent = 'Send Enquiry →'; btn.disabled=false;
+      alert('Network error. Please try again or email us directly.');
+    }
+  }
+</script>
+</body>
+</html>
