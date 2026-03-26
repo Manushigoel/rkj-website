@@ -1002,14 +1002,26 @@
       message: document.getElementById('mg').value.trim()
     };
     try {
-      const res = await fetch('https://formspree.io/f/xaqlwzov', {
+      const res = await fetch('https://formspree.io/f/xykbynol', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
         body: JSON.stringify(data)
       });
       if(res.ok){
-        btn.textContent = '✓ Enquiry Sent!';
+        btn.textContent = 'Enquiry Sent!';
         btn.style.background = 'var(--gold)';
         ['fn','ln','em','ph','sv','mg'].forEach(id=>{
           const el=document.getElementById(id);
-          if(el.tagName==='SELECT') el
+          if(el.tagName==='SELECT') el.selectedIndex=0;
+          else el.value='';
+        });
+      } else {
+        btn.textContent = 'Something went wrong. Try again.';
+        btn.disabled = false;
+      }
+    } catch(err){
+      btn.textContent = 'Error. Please try again.';
+      btn.disabled = false;
+    }
+  }
+</script>
